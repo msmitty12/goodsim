@@ -6,7 +6,7 @@ var scene;
 
 var GAME_HEIGHT = 600;
 var GAME_WIDTH = 600;
-var GAME_TIME = 10;
+var GAME_TIME = 25;
 var MAX_MISSED_COMMITMENTS = 2;
 
 var config = {
