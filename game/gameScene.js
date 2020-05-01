@@ -252,20 +252,42 @@ class GameScene extends Phaser.Scene {
 	    star.setVelocity(800, -300);
 	}
 
+	async highlightFailedChildren (children, ticket_in_progress) {
+		var depth = 1000
+        children.forEach(function (child) {
+            console.log("Setting tint for " + child);
+            child.setTint(0xff0000, 0xff0000, 0xff0000, 0xff0000);
+            child.setDepth(depth++)
+            child.setAngularVelocity(1000);
+        });
+
+        var delay = children.length > 0 ? 2000 : 0;
+        this.time.addEvent({ delay: delay, loop: false, callback: () => {this.finalizeGame(ticket_in_progress)} });
+    }
+
+    finalizeGame (ticket_in_progress) {
+    	if (ticket_in_progress) {
+			this.incomplete_sprints += 1
+		}
+    	this.scene.start("title", {score: this.total_score + this.score, incomplete_sprints: this.incomplete_sprints, sprint_num: this.sprint_num + 1});
+    }
+
 	tick () {
-		this.game_time -= 1
+		this.game_time = this.game_time > 0 ? this.game_time - 1 : 0;
 		this.timeText.setText('Time: ' + this.game_time);
 
-		if (this.game_time == 0) {
+		if (this.game_time < 1) {
 			var ticket_in_progress = false
-			this.goodTeam.children.iterate(function (child) {
-				ticket_in_progress = ticket_in_progress || child.getData("working")
-			});
+            var working_children = []
+            this.goodTeam.children.iterate(function (child) {
+                var child_is_working = child.getData("working")
+                if (child_is_working) {
+                    ticket_in_progress = true
+                    working_children.push(child)
+                }
+            });
 
-			if (ticket_in_progress) {
-				this.incomplete_sprints += 1
-			}
-			this.scene.start("title", {score: this.total_score + this.score, incomplete_sprints: this.incomplete_sprints, sprint_num: this.sprint_num + 1});
+            this.highlightFailedChildren(working_children, ticket_in_progress);			
 		}
 	}
 
