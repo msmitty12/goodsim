@@ -19,6 +19,7 @@ class GameScene extends Phaser.Scene {
 		this.score = 0;
 		this.game_time;
 		this.sprint_num;
+		this.moving_scores = [];
 	}
 
 	init(data){
@@ -123,6 +124,10 @@ class GameScene extends Phaser.Scene {
 	        point_text.x = star.x;
 	    });
 
+	    this.moving_scores.forEach(function (score_txt) {
+	    	score_txt.y = score_txt.y - 2;
+	    })
+
 	    this.updateGoodTeam()
 
 	    this.updateStuart()
@@ -207,7 +212,16 @@ class GameScene extends Phaser.Scene {
 	                child.setData("progressBar", null)
 
 	                //  Add and update the score
-	                this_scene.score += totalTime / 100;
+	                if (this_scene.game_time > 0) {
+	                	this_scene.score += totalTime / 100;
+	                	var new_score = this_scene.add.text(child.x, child.y, '+' + totalTime / 100, { fontSize: '36px', fill: 'lightgreen' });
+	                	this_scene.moving_scores.push(new_score);
+	                	this_scene.time.addEvent({ delay: 2000, callback: () => {
+	                			this_scene.moving_scores = this_scene.moving_scores.filter(function(x) { return x !== new_score; });
+	                			new_score.destroy()
+		                	}});
+
+	                }
 	                this_scene.scoreText.setText('Score: ' + this_scene.score);
 	            }
 	        }
