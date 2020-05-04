@@ -48,7 +48,7 @@ titleScene.create = function () {
         this.add.text(100, 100, 'Ouch! You missed your sprint commitments ' + this.incomplete_sprints + ' times :(', { fontSize: '15px', color: 'yellow' });
     } else if (this.sprint_num < 6) {
         var title = this.add.text(100, 50, 'Good Team Simulator', { fontSize: '36px', color: 'yellow' });
-        this.add.text(50, 100, "Fly around and deflect Stuart's Jira's", { fontSize: '20px', color: 'yellow' });
+        this.add.text(50, 100, "Fly around and deflect Stuart's Jiras", { fontSize: '20px', color: 'yellow' });
         this.add.text(50, 150, "Don't leave any work unfinished when the\n sprint ends!", { fontSize: '20px', color: 'yellow' });
         this.add.text(50, 220, "Total points completed: " + this.score, { fontSize: '20px', color: 'green' });
         if (this.incomplete_sprints == MAX_MISSED_COMMITMENTS - 1) {
